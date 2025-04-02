@@ -1,0 +1,40 @@
+[submodule "joint_state_publisher"]
+	path = automation/joint_state_publisher
+	url = https://github.com/ros/joint_state_publisher
+	branch = ros2
+[submodule "diagnostics"]
+	path = automation/diagnostics
+	url = git@github.com:ros/diagnostics.git
+	branch = ros2-humble
+[submodule "rtabmap_ros"]
+	path = automation/rtabmap_ros
+	url = https://github.com/introlab/rtabmap_ros
+	branch = ros2
+[submodule "rtabmap"]
+	path = automation/rtabmap
+	url = https://github.com/introlab/rtabmap.git
+[submodule "perception_pcl"]
+	path = automation/perception_pcl
+	url = https://github.com/ros-perception/perception_pcl
+	branch = humble
+[submodule "robot_localization"]
+	path = automation/robot_localization
+	url = git@github.com:cra-ros-pkg/robot_localization.git
+	branch = humble-devel
+[submodule "geographic_info"]
+	path = automation/geographic_info
+	url = git@github.com:ros-geographic-info/geographic_info.git
+	branch = ros2
+[submodule "common_interfaces"]
+	path = automation/common_interfaces
+	url = git@github.com:ros2/common_interfaces.git
+	branch = humble
+[submodule "bond_core"]
+	path = automation/bond_core
+	url = git@github.com:ros/bond_core.git
+	branch = ros2
+[submodule "geometry2"]
+	path = automation/geometry2
+	url = git@github.com:ros2/geometry2.git
+	branch = humble
+
