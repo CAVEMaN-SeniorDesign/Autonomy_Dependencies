@@ -1,8 +1,0 @@
-{
-    "documentId": "3d141df5b6c1cada8f38db73",
-    "outputFormat": "urdf",
-    "packageName": "rover_description/rover_desc/parts",
-    "robotName": "rover",
-    "assemblyName": "Assembly 1",
-    "addDummyBaseLink": true
-}

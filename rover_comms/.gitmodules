@@ -1,4 +1,0 @@
-[submodule "Jetson-Comms"]
-	path = Jetson-Comms
-	url = https://github.com/CAVEMaN-SeniorDesign/Jetson-Comms
-	branch = david_dev
