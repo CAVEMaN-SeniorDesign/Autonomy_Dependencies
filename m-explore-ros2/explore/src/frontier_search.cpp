@@ -3,6 +3,7 @@
 
 #include <geometry_msgs/msg/point.hpp>
 #include <mutex>
+#include <stack> // Changed from queue to stack for DFS
 
 #include "nav2_costmap_2d/cost_values.hpp"
 
@@ -48,32 +49,32 @@ FrontierSearch::searchFrom(geometry_msgs::msg::Point position)
   std::vector<bool> frontier_flag(size_x_ * size_y_, false);
   std::vector<bool> visited_flag(size_x_ * size_y_, false);
 
-  // initialize breadth first search
-  std::queue<unsigned int> bfs;
+  // initialize depth first search (using stack instead of queue)
+  std::stack<unsigned int> dfs;
 
   // find closest clear cell to start search
   unsigned int clear, pos = costmap_->getIndex(mx, my);
   if (nearestCell(clear, pos, FREE_SPACE, *costmap_)) {
-    bfs.push(clear);
+    dfs.push(clear);
   } else {
-    bfs.push(pos);
+    dfs.push(pos);
     RCLCPP_WARN(rclcpp::get_logger("FrontierSearch"), "Could not find nearby "
                                                       "clear cell to start "
                                                       "search");
   }
-  visited_flag[bfs.front()] = true;
+  visited_flag[dfs.top()] = true;
 
-  while (!bfs.empty()) {
-    unsigned int idx = bfs.front();
-    bfs.pop();
+  while (!dfs.empty()) {
+    unsigned int idx = dfs.top();
+    dfs.pop();
 
     // iterate over 4-connected neighbourhood
     for (unsigned nbr : nhood4(idx, *costmap_)) {
-      // add to queue all free, unvisited cells, use descending search in case
+      // add to stack all free, unvisited cells, use descending search in case
       // initialized on non-free cell
       if (map_[nbr] <= map_[idx] && !visited_flag[nbr]) {
         visited_flag[nbr] = true;
-        bfs.push(nbr);
+        dfs.push(nbr);
         // check if cell is new frontier cell (unvisited, NO_INFORMATION, free
         // neighbour)
       } else if (isNewFrontierCell(nbr, frontier_flag)) {
@@ -114,9 +115,9 @@ Frontier FrontierSearch::buildNewFrontier(unsigned int initial_cell,
   costmap_->indexToCells(initial_cell, ix, iy);
   costmap_->mapToWorld(ix, iy, output.initial.x, output.initial.y);
 
-  // push initial gridcell onto queue
-  std::queue<unsigned int> bfs;
-  bfs.push(initial_cell);
+  // push initial gridcell onto stack (for DFS instead of queue for BFS)
+  std::stack<unsigned int> dfs;
+  dfs.push(initial_cell);
 
   // cache reference position in world coords
   unsigned int rx, ry;
@@ -124,9 +125,9 @@ Frontier FrontierSearch::buildNewFrontier(unsigned int initial_cell,
   costmap_->indexToCells(reference, rx, ry);
   costmap_->mapToWorld(rx, ry, reference_x, reference_y);
 
-  while (!bfs.empty()) {
-    unsigned int idx = bfs.front();
-    bfs.pop();
+  while (!dfs.empty()) {
+    unsigned int idx = dfs.top();
+    dfs.pop();
 
     // try adding cells in 8-connected neighborhood to frontier
     for (unsigned int nbr : nhood8(idx, *costmap_)) {
@@ -161,8 +162,8 @@ Frontier FrontierSearch::buildNewFrontier(unsigned int initial_cell,
           output.middle.y = wy;
         }
 
-        // add to queue for breadth first search
-        bfs.push(nbr);
+        // add to stack for depth first search
+        dfs.push(nbr);
       }
     }
   }

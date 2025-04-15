@@ -9,14 +9,15 @@ namespace frontier_exploration
  * @brief Represents a frontier
  *
  */
-struct Frontier {
-  std::uint32_t size;
-  double min_distance;
-  double cost;
+ struct Frontier {
+  std::vector<geometry_msgs::msg::Point> points;
   geometry_msgs::msg::Point initial;
   geometry_msgs::msg::Point centroid;
   geometry_msgs::msg::Point middle;
-  std::vector<geometry_msgs::msg::Point> points;
+  double min_distance;
+  double cost;
+  double size;
+  bool dfs_path; // Whether this frontier was discovered along the DFS path
 };
 
 /**
